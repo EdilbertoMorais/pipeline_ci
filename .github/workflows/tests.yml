@@ -19,15 +19,15 @@ jobs:
         id: mix-cache-coverage
         with: 
           path: deps
-          key: ${{ runner.os}}-${{ matrix.otp}}-${{matrix.elixir}}-mix-${{hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
       - name: Install Mix Dependencies
-        if:  steps.mix-chache-coverage.outputs.cache-hit != 'true'
+        if:  steps.mix-cache-coverage.outputs.cache-hit != 'true'
         run: |
           mix local.rebar --force
           mix local.hex --force
           mix deps.get
           mix ecto.create
-        run: mix deps.get
+          mix deps.get
       - name: ==> Verify Coverage and tests
         run: mix coveralls.html
     services:
@@ -35,7 +35,7 @@ jobs:
         image: postgres:13
         ports: ['5432:5432']
         env:
-          POSTEGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
